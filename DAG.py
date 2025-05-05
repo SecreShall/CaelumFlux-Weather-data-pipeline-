@@ -15,7 +15,7 @@ dag = DAG(
      dag_id='weather_etl',
      default_args=default_args,
      description='Weather Data Pipeline',
-     schedule=timedelta(days=1),
+     schedule=timedelta(minutes=1),
 )
 
 extract_task = PythonOperator(
