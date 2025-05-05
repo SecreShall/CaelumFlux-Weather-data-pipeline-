@@ -26,7 +26,7 @@ extract_task = PythonOperator(
 
 transform_task = PythonOperator(
     task_id='transform',
-    python_callable=transform,
+    python_callable=lambda: transform(extract()),
     dag=dag,
 )
 

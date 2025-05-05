@@ -2,29 +2,36 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 import os
-
-
-load_dotenv()
-api_key = os.getenv("API_KEY")
-city = 'manila'
-base_url = "https://api.openweathermap.org/data/2.5/weather"
-
-params = {"q": city, "appid": api_key, "units": "metric"}
-response = requests.get(base_url, params=params)
-data =response.json()
-
-print(data['weather'][0]['description'])
-
+import datetime
 
 
 def extract():
-    print('yameteee')
+    load_dotenv()
+    api_key = os.getenv("API_KEY")
+    latitude = 14.17
+    longitude = 121.32
+    url = f"http://api.openweathermap.org/data/2.5/weather?lat={latitude}&lon={longitude}&appid={api_key}"
 
+    response = requests.get(url)
+    data = response.json()
 
-def transform():
-	pass
+    return data
 
+def transform(data):
+	return {
+        'Time': datetime.now(),
+        'Location': data['name'],
+        'Temperature': data['main'][0]['temp'],
+        'Min Temperature': data['main'][0]['temp_min'],
+        'Max Temperature': data['main'][0]['temp_max'],
+        'humidity': data['main'][0]['humidity'],
+        'Weather Condition': data['weather'][0]['description'],
+        'Wind Speed': data['speed'],
+        'Direction': data['deg'],
+        'Cloud Coverage': data['clouds'][0]['all']
+    }
 
 def load():
     pass
 
+extract()
