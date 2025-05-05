@@ -14,8 +14,6 @@ def extract():
     response = requests.get(url)
     data = response.json()
 
-    print(data)
-
     return data
 
 def transform(data):
