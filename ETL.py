@@ -58,6 +58,3 @@ def load(data):
     finally:
          cursor.close()
          connection.close()
-
-
-load(transform(extract()))
