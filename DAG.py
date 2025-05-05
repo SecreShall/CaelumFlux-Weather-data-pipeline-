@@ -32,7 +32,7 @@ transform_task = PythonOperator(
 
 load_task = PythonOperator(
     task_id='load',
-    python_callable=load,
+    python_callable=lambda: load(transform(extract())),
     dag=dag,
 )
 
