@@ -1,4 +1,3 @@
-import pandas as pd
 import requests
 from dotenv import load_dotenv
 import os
@@ -15,20 +14,21 @@ def extract():
     response = requests.get(url)
     data = response.json()
 
+    print(data)
+
     return data
 
 def transform(data):
 	return {
-        'Time': datetime.datetime.now(),
-        'Location': data['name'],
+        'Time': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'Temperature': data['main']['temp'],
         'Min Temperature': data['main']['temp_min'],
         'Max Temperature': data['main']['temp_max'],
         'Humidity': data['main']['humidity'],
-        'Weather Condition': data['weather'][0]['description'],
         'Wind Speed': data['wind']['speed'],
         'Direction': data['wind']['deg'],
-        'Cloud Coverage': data['clouds']['all']
+        'Gust': data['wind']['gust'],
+        'Weather Condition': data['weather'][0]['description']
     } 
 
 def load(data):
@@ -45,10 +45,11 @@ def load(data):
          )
         cursor = connection.cursor()
 
-        insert_query = f"INSERT INTO weather_data VALUES({data['Time']},{data['Location']}, {data['Temperature']},{data['Min Temperature']},{data['Max Temperature']},{data['Humidity']},{data['Weather Condition']},{data['Wind Speed']},{data['Direction']},{data['Cloud Coverage']})"
+        insert_query = f"INSERT INTO weather_data (timestamp, temperature, min_temp, max_temp, humidity, wind_speed, direction, gust, condition) VALUES('{data['Time']}', {data['Temperature']},{data['Min Temperature']},{data['Max Temperature']},{data['Humidity']},{data['Wind Speed']},{data['Direction']},{data['Gust']},'{data['Weather Condition']}')"
 
         cursor.execute(insert_query)
         connection.commit()
+        print("Insert successful...")
 
     except Exception as e:
          print(f"Insertion failed... Error {e}")
@@ -56,4 +57,3 @@ def load(data):
     finally:
          cursor.close()
          connection.close()
-
